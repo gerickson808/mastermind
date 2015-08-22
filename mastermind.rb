@@ -141,7 +141,6 @@ class Ai < Player
 			code = @bank.shuffle.join(" ")
 		end
 		@guessed_array << code
-		p @guessed_array
 		return code
 	end
 
@@ -182,8 +181,7 @@ class Game
 			puts "Please choose 1 or 2"
 			define_players
 		end
-		p @creator.class
-		p @guesser.class
+
 	end
 
 
@@ -231,7 +229,11 @@ class Game
 	end
 
 	def correct_guess
-		puts "You did it, champ! Type 'yes' for New Game!"
+		if @guesser.class == Human
+			puts "You did it, champ! Type 'yes' for New Game!"
+		else
+			puts "The computer guessed your code! Type 'yes' to try again!"
+		end
 		new_game
 	end
 
@@ -246,11 +248,15 @@ class Game
 		puts "You have #{12-@turn} turns left!"
 		puts ""
 
-		@guesser.feedback = perfect + correct
+		@guesser.feedback = perfect + correct if @guesser.class == Ai
 
 		if @turn == 12
-			puts "You're out of turns! Sorry bro."
-			puts "The correct code was #{@creator.code.colors.join(" ")}"
+			if @guesser.class == Human
+				puts "You're out of turns! Sorry bro."
+				puts "The correct code was #{@creator.code.colors.join(" ")}"
+			else
+				puts "You fooled the computer!"
+			end
 			puts "\nType 'yes' to start a new game."
 			new_game
 		end
